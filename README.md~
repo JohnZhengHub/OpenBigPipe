@@ -280,7 +280,7 @@ springMVC获取request和response的几种方式:注解,配置RequestContextList
 用于生成一些对象,如视图解析类对象,pagelet解析对象,pagelet注解寻找器等
 ### 单例模式
 无状态类是安全类,所以很多无状态的处理类都采用了单例模式.如视图解析器,
-
+### 
 
 
 

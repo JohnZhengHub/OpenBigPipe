@@ -26,4 +26,9 @@ public @interface BigPipe {
 	 * @return
 	 */
 	ExecuteType type() default ExecuteType.BIGPIPE;
+	/**
+	 * 视图
+	 * @return
+	 */
+	String view() default "";
 }

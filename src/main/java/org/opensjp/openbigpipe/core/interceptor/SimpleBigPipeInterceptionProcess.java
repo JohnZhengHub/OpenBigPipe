@@ -36,6 +36,7 @@ public class SimpleBigPipeInterceptionProcess implements BigPipeInterceptionProc
 		BigPipeBean bpbDefinition = this.processControllerWithAnno(targetClassType,object,targetMethod,request,response);
 		AbstractBigPipeController bigPipeExecutor = null;
 		try{
+			//每个请求创建一个controller
 			bigPipeExecutor = BigPipeExecutorFactory.newInstance();
 			//初始化插件
 			bigPipeExecutor.initPlugin(packageScan,configPath);
@@ -43,6 +44,7 @@ public class SimpleBigPipeInterceptionProcess implements BigPipeInterceptionProc
 			logger.debug("Init openBigPipe error");
 			throw new RuntimeException(e);
 		}
+		
 		bigPipeExecutor.setBigPipeBean(bpbDefinition);
 		//向对象中　含有@Param 的BigPipeController域注入bigPipeController 对象
 		InjectUtils.injectBigPipeControllerＷithParamAnno(object,bigPipeExecutor);
