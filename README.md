@@ -53,17 +53,25 @@ index.ftl:
 		<#--</body>-->
 		<#--</html>-->
 
+
 one.ftl
-		<h2>${user.name} ${time} ms Part1</h2>
+
+			<h2>${user.name} ${time} ms Part1</h2>
+
 
 two.ftl 
-		<h2>${time} ms part2</h2>
+
+			<h2>${time} ms part2</h2>
+
 
 three.ftl
-		<h2>${time} ms part3</h2>
+
+			<h2>${time} ms part3</h2>
+
 
 four.ftl
-		<h2>${time}ms part4</h2>
+
+			<h2>${time}ms part4</h2>
 
 
 ### 公共配置
@@ -86,8 +94,9 @@ four.ftl
 		 <bean class="org.opensjp.openbigpipe.core.interceptor.BigPipeAspect"/> 
 
 3. 为每个前段的pagelet配置一个执行方法
-			@PageletSet
-			public class PipeFour{
+
+		@PageletSet
+		public class PipeFour{
 
 			    @Param
 			    private String name;
