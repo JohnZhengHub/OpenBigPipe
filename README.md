@@ -69,80 +69,82 @@ four.ftl
 ### 公共配置
 这部分是不管使用什么框架都必须配置的.
 1. BigPipeFilter过滤器,配置在web.xml最前面:
-	<filter>  
-      	<filter-name>bigPipeFilter</filter-name>  
-      	<filter-class>org.opensjp.openbigpipe.core.filter.BigPipeFilter</filter-class>  
-	    </filter>  
-	    <filter-mapping>  
+
+		<filter>  
 	      	<filter-name>bigPipeFilter</filter-name>  
-	      	<url-pattern>/*</url-pattern>  
-	    </filter-mapping>
+	      	<filter-class>org.opensjp.openbigpipe.core.filter.BigPipeFilter</filter-class>  
+		    </filter>  
+		    <filter-mapping>  
+		      	<filter-name>bigPipeFilter</filter-name>  
+		      	<url-pattern>/*</url-pattern>  
+		    </filter-mapping>
 
 
 2. 配置AOP,因为本框架是基于AOP的
-	 <aop:aspectj-autoproxy proxy-target-class="true" /> 
-	 <bean class="org.opensjp.openbigpipe.core.interceptor.BigPipeAspect"/> 
+
+		 <aop:aspectj-autoproxy proxy-target-class="true" /> 
+		 <bean class="org.opensjp.openbigpipe.core.interceptor.BigPipeAspect"/> 
 
 3. 为每个前段的pagelet配置一个执行方法
-		@PageletSet
-		public class PipeFour{
+			@PageletSet
+			public class PipeFour{
 
-		    @Param
-		    private String name;
-		    @Param
-		    private User user;
-		    @Param
-		    private int age;
-		    @Param
-		    private int time;
-		    
-		    @Pagelet(key="four")
-		    public String execute() {
-			age = 100;
-			time = 5000;
-			SleepUtils.sleep(time);
-			return "demo/one.ftl";
-		    }
-		}
-
-		@PageletSet
-		public class UserPipes {
-			@Param
-		    private String name;
-			@Param
-		    private User user;
-			@Param
-		    private int age;
-			@Param
-		    private int time;
-	
-			@Pagelet(key="one")
-			public String pipeOne(){
-				time = 500;
-				if (name.equals("down")) {
-				    user = null;
-				    user.setName("");
-				}
-				SleepUtils.sleep(time);		
+			    @Param
+			    private String name;
+			    @Param
+			    private User user;
+			    @Param
+			    private int age;
+			    @Param
+			    private int time;
+			    
+			    @Pagelet(key="four")
+			    public String execute() {
+				age = 100;
+				time = 5000;
+				SleepUtils.sleep(time);
 				return "demo/one.ftl";
+			    }
 			}
-			@Pagelet(key="two")
-			public String pipeTwo(){
-				time = 1000;
-				SleepUtils.sleep(time);
-		
-				return "demo/two.ftl";
-			}
+
+			@PageletSet
+			public class UserPipes {
+				@Param
+			    private String name;
+				@Param
+			    private User user;
+				@Param
+			    private int age;
+				@Param
+			    private int time;
 	
-			@Pagelet(key="three")
-			public String pipeThree(){
-				age = 50;
-				time = 3000;
-				SleepUtils.sleep(time);
+				@Pagelet(key="one")
+				public String pipeOne(){
+					time = 500;
+					if (name.equals("down")) {
+					    user = null;
+					    user.setName("");
+					}
+					SleepUtils.sleep(time);		
+					return "demo/one.ftl";
+				}
+				@Pagelet(key="two")
+				public String pipeTwo(){
+					time = 1000;
+					SleepUtils.sleep(time);
 		
-				return "demo/three.ftl";
+					return "demo/two.ftl";
+				}
+	
+				@Pagelet(key="three")
+				public String pipeThree(){
+					age = 50;
+					time = 3000;
+					SleepUtils.sleep(time);
+		
+					return "demo/three.ftl";
+				}
 			}
-		}
 
 **@PageletSet**,表示pagelet集合.标注在类上,表示该类含有一个或多个Pagelet,便于插件的查找和解析.
 **@Pagelet** 对应页面的一个pagelet,用于该pagelet的数据处理.即页面渲染(渲染部分用其他组件进行).pagelet中有三个属性:
@@ -152,33 +154,33 @@ four.ftl
 	
 ### SpringMVC
 控制器:
-	@Controller
-	public class LoginAction{
-	    String name;
-	    @Autowired
-	    private User user;
-	    @Param 
-	    private BigPipeController  bigPipeController;
-	    
-	    @BigPipe
-	    @RequestMapping("/login")
-	    @ResponseBody
-	    public String login(User user) throws Exception {
-	    	//这边处理业务逻辑
-	    	//....
+		@Controller
+		public class LoginAction{
+		    String name;
+		    @Autowired
+		    private User user;
+		    @Param 
+		    private BigPipeController  bigPipeController;
+		    
+		    @BigPipe
+		    @RequestMapping("/login")
+		    @ResponseBody
+		    public String login(User user) throws Exception {
+		    	//这边处理业务逻辑
+		    	//....
 
-	    	String[] pageletKeys = new String[]{"one","two","three","four"};
-			return bigPipeController.execute("index.ftl", pageletKeys);
-	    }
-	    
-	    @RequestMapping("/test")
-	    @ResponseBody
-	    public String test(User user) throws Exception {
-	    	System.out.println("------------");
-	    	return "index";
-	    }
+		    	String[] pageletKeys = new String[]{"one","two","three","four"};
+				return bigPipeController.execute("index.ftl", pageletKeys);
+		    }
+		    
+		    @RequestMapping("/test")
+		    @ResponseBody
+		    public String test(User user) throws Exception {
+		    	System.out.println("------------");
+		    	return "index";
+		    }
 
-	}
+		}
 
 插件注解:
 **@Param** : 表示该值通过插件进行注入,BigPipeController这个是必须的,表示插件的控制器.变量名可以自定定义.由插件自动注入.
@@ -188,20 +190,20 @@ springMVC注解:
 **@ResponseBody** : 表示可以返回空白页面,主要是用于
 
 BigPipeController的execute方法是让插件使用并发或bigPipe方式执行页面的渲染和返回.主要有两种重载方式:
-		/**
-		 * 该方法是整个框架的核心，负责执行请求.
-		 * @param viewFrame  页面视图框架 相对路径
-		 * @param pageletKeys 　pagelet的key值数据,默认的div id是key
-		 * @return
-		 */
-		public String execute(String viewFrame,String[] pageletKeys);
-		/**
-		 * 
-		 * @param viewFrame 视图框架
-		 * @param pageletMap　各个pagelet的pagelet　key和div id的映射关系
-		 * @return
-		 */
-		public String execute(String viewFrame,Map<String,String> pageletMap);
+			/**
+			 * 该方法是整个框架的核心，负责执行请求.
+			 * @param viewFrame  页面视图框架 相对路径
+			 * @param pageletKeys 　pagelet的key值数据,默认的div id是key
+			 * @return
+			 */
+			public String execute(String viewFrame,String[] pageletKeys);
+			/**
+			 * 
+			 * @param viewFrame 视图框架
+			 * @param pageletMap　各个pagelet的pagelet　key和div id的映射关系
+			 * @return
+			 */
+			public String execute(String viewFrame,Map<String,String> pageletMap);
 
 此时运行便可以达到并发执行的要求了.
 
@@ -267,17 +269,23 @@ springMVC获取request和response的几种方式:注解,配置RequestContextList
 
 
 ## 设计模式
+
 ### AOP模式
 使用AOP来拦截使用插件执行的请求.用于获取相关配置信息,及为后期提供拓展.
+
 ### 代理模式
 为每个Pagelet提供代理去执行对应的方法,代理模式可以处理一些异常情况.如果发生异常则可以使用用户拓展的处理方式.
+
 ### 策略模式
 1. 对于不同的视图采用不同的策略处理. 
 2. 对于不同的执行配置采用不同执行方式
+
 ### 模板方法
 在解析pagelet时使用模板方法,定义一个解析的框架,首先获取所有相关注解的class,解析这些class,注册到容器中.每一步对应一个方法,这些方法留给子类实现.
+
 ### 工厂方法
 用于生成一些对象,如视图解析类对象,pagelet解析对象,pagelet注解寻找器等
+
 ### 单例模式
 无状态类是安全类,所以很多无状态的处理类都采用了单例模式.如视图解析器,
 
